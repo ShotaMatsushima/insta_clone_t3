@@ -1,5 +1,8 @@
+import { config } from "dotenv";
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
+
+config();
 
 export const env = createEnv({
   /**
@@ -7,12 +10,16 @@ export const env = createEnv({
    * isn't built with invalid env vars.
    */
   server: {
+    //文字列でurlを指定する
     DATABASE_URL: z.string().url(),
+    //指定の文字列のみを許可する
     NODE_ENV: z.enum(["development", "test", "production"]),
+    //production環境の時は文字列の最小値を1にして、そうでないときは文字列の最小値を1にして必須でないようにする
     NEXTAUTH_SECRET:
       process.env.NODE_ENV === "production"
         ? z.string().min(1)
         : z.string().min(1).optional(),
+
     NEXTAUTH_URL: z.preprocess(
       // This makes Vercel deployments not fail if you don't set NEXTAUTH_URL
       // Since NextAuth.js automatically uses the VERCEL_URL if present.
