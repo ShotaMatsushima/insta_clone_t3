@@ -2,7 +2,7 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
 export const postRouter = createTRPCRouter({
-  post: publicProcedure
+  create: publicProcedure
     .input(z.object({ title: z.string(), content: z.string() }))
     .query(({ ctx, input }) => {
       return ctx.prisma.post.create({
